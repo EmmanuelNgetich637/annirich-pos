@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
     createProductValidation,
+    updateProductValidation,
     validate
 } = require("../validators/productValidator");
 
@@ -33,6 +34,15 @@ router.post(
     createProductValidation,
     validate,
     productController.createProduct
+);
+
+router.put(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager"),
+    updateProductValidation,
+    validate,
+    productController.updateProduct
 );
 
 module.exports = router;

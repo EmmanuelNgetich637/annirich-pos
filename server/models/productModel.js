@@ -75,8 +75,58 @@ const getProductById = async (id) => {
 
 };
 
+const updateProduct = async (id, product) => {
+
+    const {
+        barcode,
+        name,
+        category_id,
+        buying_price,
+        selling_price,
+        quantity,
+        minimum_stock,
+        unit,
+        image,
+        description
+    } = product;
+
+    const [result] = await db.query(
+        `
+        UPDATE products
+        SET
+            barcode=?,
+            name=?,
+            category_id=?,
+            buying_price=?,
+            selling_price=?,
+            quantity=?,
+            minimum_stock=?,
+            unit=?,
+            image=?,
+            description=?
+        WHERE id=?
+        `,
+        [
+            barcode,
+            name,
+            category_id,
+            buying_price,
+            selling_price,
+            quantity,
+            minimum_stock,
+            unit,
+            image,
+            description,
+            id
+        ]
+    );
+
+    return result;
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
-    createProduct
+    createProduct,
+    updateProduct
 };

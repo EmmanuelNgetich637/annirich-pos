@@ -43,5 +43,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
     createProductValidation,
+    updateProductValidation: createProductValidation,
     validate
 };

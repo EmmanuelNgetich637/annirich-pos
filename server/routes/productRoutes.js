@@ -21,6 +21,13 @@ router.get(
 );
 
 router.get(
+    "/page/list",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    productController.getProductsPaginated
+);
+
+router.get(
     "/",
     authenticate,
     authorize("admin", "manager", "cashier"),

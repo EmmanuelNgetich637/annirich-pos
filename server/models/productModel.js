@@ -170,11 +170,47 @@ const searchProducts = async (searchTerm) => {
 
 };
 
+const getProductsPaginated = async (page = 1, limit = 10) => {
+
+    const offset = (page - 1) * limit;
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            products.*,
+            categories.name AS category_name
+        FROM products
+        JOIN categories
+            ON products.category_id = categories.id
+        WHERE products.status='active'
+        ORDER BY products.id DESC
+        LIMIT ?
+        OFFSET ?
+        `,
+        [Number(limit), Number(offset)]
+    );
+
+    const [count] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM products
+        WHERE status='active'
+        `
+    );
+
+    return {
+        products: rows,
+        total: count[0].total
+    };
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct,
-    searchProducts
+    searchProducts,
+    getProductsPaginated
 };

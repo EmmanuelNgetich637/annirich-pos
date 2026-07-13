@@ -57,11 +57,18 @@ const searchProducts = async (query) => {
 
 };
 
+const getProductsPaginated = async (page, limit) => {
+
+    return await Product.getProductsPaginated(page, limit);
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
     createProduct,
     updateProduct,
     deleteProduct,
-    searchProducts
+    searchProducts,
+    getProductsPaginated
 };

@@ -115,11 +115,46 @@ const searchProducts = async (req, res) => {
 
 };
 
+const getProductsPaginated = async (req, res) => {
+
+    try {
+
+        const page = parseInt(req.query.page) || 1;
+
+        const limit = parseInt(req.query.limit) || 10;
+
+        const result = await productService.getProductsPaginated(
+            page,
+            limit
+        );
+
+        res.json({
+            success: true,
+            page,
+            limit,
+            total: result.total,
+            totalPages: Math.ceil(result.total / limit),
+            count: result.products.length,
+            data: result.products
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
     createProduct,
     updateProduct,
     deleteProduct,
-    searchProducts
+    searchProducts,
+    getProductsPaginated
 };

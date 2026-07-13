@@ -45,4 +45,11 @@ router.put(
     productController.updateProduct
 );
 
+router.delete(
+    "/:id",
+    authenticate,
+    authorize("admin"),
+    productController.deleteProduct
+);
+
 module.exports = router;

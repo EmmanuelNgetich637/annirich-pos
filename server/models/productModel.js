@@ -124,9 +124,25 @@ const updateProduct = async (id, product) => {
     return result;
 };
 
+const deleteProduct = async (id) => {
+
+    const [result] = await db.query(
+        `
+        UPDATE products
+        SET status='inactive'
+        WHERE id=?
+        `,
+        [id]
+    );
+
+    return result;
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 };

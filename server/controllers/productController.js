@@ -191,6 +191,34 @@ const updateProductImage = async (req, res) => {
 
 };
 
+const getLowStockProducts = async (req, res) => {
+
+    try {
+
+        const products =
+            await productService.getLowStockProducts();
+
+        res.json({
+
+            success: true,
+            count: products.length,
+            data: products
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
@@ -199,5 +227,6 @@ module.exports = {
     deleteProduct,
     searchProducts,
     getProductsPaginated,
-    updateProductImage
+    updateProductImage,
+    getLowStockProducts
 };

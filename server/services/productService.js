@@ -82,6 +82,12 @@ const updateProductImage = async (id, file) => {
 
 };
 
+const getLowStockProducts = async () => {
+
+    return await Product.getLowStockProducts();
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
@@ -90,5 +96,6 @@ module.exports = {
     deleteProduct,
     searchProducts,
     getProductsPaginated,
-    updateProductImage
+    updateProductImage,
+    getLowStockProducts
 };

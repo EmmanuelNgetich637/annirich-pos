@@ -30,6 +30,13 @@ router.get(
 );
 
 router.get(
+    "/low-stock",
+    authenticate,
+    authorize("admin", "manager"),
+    productController.getLowStockProducts
+);
+
+router.get(
     "/",
     authenticate,
     authorize("admin", "manager", "cashier"),

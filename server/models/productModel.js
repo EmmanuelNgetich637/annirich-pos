@@ -223,6 +223,28 @@ const updateProductImage = async (id, image) => {
 
 };
 
+const getLowStockProducts = async () => {
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            products.*,
+            categories.name AS category_name
+        FROM products
+        JOIN categories
+            ON products.category_id = categories.id
+        WHERE
+            products.status='active'
+        AND
+            products.quantity <= products.minimum_stock
+        ORDER BY quantity ASC
+        `
+    );
+
+    return rows;
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
@@ -231,5 +253,6 @@ module.exports = {
     deleteProduct,
     searchProducts,
     getProductsPaginated,
-    updateProductImage
+    updateProductImage,
+    getLowStockProducts
 };

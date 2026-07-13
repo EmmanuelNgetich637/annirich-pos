@@ -14,6 +14,13 @@ const authenticate = require("../middleware/authMiddleware");
 const authorize = require("../middleware/roleMiddleware");
 
 router.get(
+    "/search",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    productController.searchProducts
+);
+
+router.get(
     "/",
     authenticate,
     authorize("admin", "manager", "cashier"),

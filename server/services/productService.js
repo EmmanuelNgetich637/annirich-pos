@@ -51,10 +51,17 @@ const deleteProduct = async (id) => {
 
 };
 
+const searchProducts = async (query) => {
+
+    return await Product.searchProducts(query);
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 };

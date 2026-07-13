@@ -139,10 +139,42 @@ const deleteProduct = async (id) => {
 
 };
 
+const searchProducts = async (searchTerm) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            products.*,
+            categories.name AS category_name
+        FROM products
+        JOIN categories
+            ON products.category_id = categories.id
+        WHERE
+            products.status='active'
+        AND
+        (
+            products.name LIKE ?
+            OR products.barcode LIKE ?
+            OR categories.name LIKE ?
+        )
+        ORDER BY products.name ASC
+        `,
+        [
+            `%${searchTerm}%`,
+            `%${searchTerm}%`,
+            `%${searchTerm}%`
+        ]
+    );
+
+    return rows;
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 };

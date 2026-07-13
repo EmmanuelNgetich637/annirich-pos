@@ -90,10 +90,36 @@ const deleteProduct = async (req, res) => {
 
 };
 
+const searchProducts = async (req, res) => {
+
+    try {
+
+        const q = req.query.q || "";
+
+        const products = await productService.searchProducts(q);
+
+        res.json({
+            success: true,
+            count: products.length,
+            data: products
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 };

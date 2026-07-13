@@ -13,6 +13,8 @@ const productController = require("../controllers/productController");
 const authenticate = require("../middleware/authMiddleware");
 const authorize = require("../middleware/roleMiddleware");
 
+const upload = require("../middleware/uploadMiddleware");
+
 router.get(
     "/search",
     authenticate,
@@ -48,6 +50,14 @@ router.post(
     createProductValidation,
     validate,
     productController.createProduct
+);
+
+router.post(
+    "/:id/upload",
+    authenticate,
+    authorize("admin", "manager"),
+    upload.single("image"),
+    productController.updateProductImage
 );
 
 router.put(

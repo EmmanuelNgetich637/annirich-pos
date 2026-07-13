@@ -149,6 +149,48 @@ const getProductsPaginated = async (req, res) => {
 
 };
 
+const updateProductImage = async (req, res) => {
+
+    try {
+
+        if (!req.file) {
+
+            return res.status(400).json({
+
+                success: false,
+                message: "Please upload an image."
+
+            });
+
+        }
+
+        const product =
+            await productService.updateProductImage(
+                req.params.id,
+                req.file
+            );
+
+        res.json({
+
+            success: true,
+            message: "Image uploaded successfully.",
+            data: product
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
@@ -156,5 +198,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProducts,
-    getProductsPaginated
+    getProductsPaginated,
+    updateProductImage
 };

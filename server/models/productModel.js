@@ -205,6 +205,24 @@ const getProductsPaginated = async (page = 1, limit = 10) => {
 
 };
 
+const updateProductImage = async (id, image) => {
+
+    const [result] = await db.query(
+
+        `
+        UPDATE products
+        SET image=?
+        WHERE id=?
+        `,
+
+        [image, id]
+
+    );
+
+    return result;
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
@@ -212,5 +230,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProducts,
-    getProductsPaginated
+    getProductsPaginated,
+    updateProductImage
 };

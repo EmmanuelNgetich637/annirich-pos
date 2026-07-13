@@ -63,6 +63,25 @@ const getProductsPaginated = async (page, limit) => {
 
 };
 
+const updateProductImage = async (id, file) => {
+
+    const product = await Product.getProductById(id);
+
+    if (!product) {
+
+        throw new Error("Product not found");
+
+    }
+
+    await Product.updateProductImage(
+        id,
+        file.filename
+    );
+
+    return await Product.getProductById(id);
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
@@ -70,5 +89,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProducts,
-    getProductsPaginated
+    getProductsPaginated,
+    updateProductImage
 };

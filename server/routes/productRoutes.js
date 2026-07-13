@@ -37,6 +37,13 @@ router.get(
 );
 
 router.get(
+    "/stats",
+    authenticate,
+    authorize("admin", "manager"),
+    productController.getProductStatistics
+);
+
+router.get(
     "/",
     authenticate,
     authorize("admin", "manager", "cashier"),

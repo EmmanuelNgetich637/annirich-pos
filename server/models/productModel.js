@@ -245,6 +245,60 @@ const getLowStockProducts = async () => {
 
 };
 
+const getProductStatistics = async () => {
+
+    const [[total]] = await db.query(`
+        SELECT COUNT(*) AS totalProducts
+        FROM products
+    `);
+
+    const [[active]] = await db.query(`
+        SELECT COUNT(*) AS activeProducts
+        FROM products
+        WHERE status='active'
+    `);
+
+    const [[inactive]] = await db.query(`
+        SELECT COUNT(*) AS inactiveProducts
+        FROM products
+        WHERE status='inactive'
+    `);
+
+    const [[lowStock]] = await db.query(`
+        SELECT COUNT(*) AS lowStockProducts
+        FROM products
+        WHERE status='active'
+        AND quantity <= minimum_stock
+    `);
+
+    const [[outOfStock]] = await db.query(`
+        SELECT COUNT(*) AS outOfStockProducts
+        FROM products
+        WHERE status='active'
+        AND quantity = 0
+    `);
+
+    const [[inventory]] = await db.query(`
+        SELECT
+            IFNULL(
+                SUM(quantity * buying_price),
+                0
+            ) AS inventoryValue
+        FROM products
+        WHERE status='active'
+    `);
+
+    return {
+        ...total,
+        ...active,
+        ...inactive,
+        ...lowStock,
+        ...outOfStock,
+        ...inventory
+    };
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
@@ -254,5 +308,6 @@ module.exports = {
     searchProducts,
     getProductsPaginated,
     updateProductImage,
-    getLowStockProducts
+    getLowStockProducts,
+    getProductStatistics
 };

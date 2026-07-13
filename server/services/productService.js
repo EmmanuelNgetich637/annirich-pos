@@ -88,6 +88,12 @@ const getLowStockProducts = async () => {
 
 };
 
+const getProductStatistics = async () => {
+
+    return await Product.getProductStatistics();
+
+};
+
 module.exports = {
     getProducts,
     getProduct,
@@ -97,5 +103,6 @@ module.exports = {
     searchProducts,
     getProductsPaginated,
     updateProductImage,
-    getLowStockProducts
+    getLowStockProducts,
+    getProductStatistics
 };

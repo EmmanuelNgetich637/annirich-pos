@@ -7,6 +7,7 @@ require("../controllers/categoryController");
 
 const {
     createCategoryValidation,
+    updateCategoryValidation,
     validate
 } = require("../validators/categoryValidator");
 
@@ -37,6 +38,15 @@ router.post(
     createCategoryValidation,
     validate,
     categoryController.createCategory
+);
+
+router.put(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager"),
+    updateCategoryValidation,
+    validate,
+    categoryController.updateCategory
 );
 
 module.exports = router;

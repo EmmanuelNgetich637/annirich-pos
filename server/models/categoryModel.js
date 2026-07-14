@@ -67,9 +67,51 @@ const createCategory = async (category) => {
 
 };
 
+const getCategoryByNameExcludingId = async (name, id) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM categories
+        WHERE LOWER(name) = LOWER(?)
+        AND id != ?
+        LIMIT 1
+        `,
+        [name, id]
+    );
+
+    return rows[0];
+
+};
+
+const updateCategory = async (id, category) => {
+
+    const { name, description } = category;
+
+    const [result] = await db.query(
+        `
+        UPDATE categories
+        SET
+            name = ?,
+            description = ?
+        WHERE id = ?
+        `,
+        [
+            name,
+            description || null,
+            id
+        ]
+    );
+
+    return result;
+
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,
     getCategoryByName,
-    createCategory
+    getCategoryByNameExcludingId,
+    createCategory,
+    updateCategory
 };

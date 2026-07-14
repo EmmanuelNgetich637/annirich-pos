@@ -32,8 +32,33 @@ const createCategory = async (data) => {
 
 };
 
+const updateCategory = async (id, data) => {
+
+    const category = await Category.getCategoryById(id);
+
+    if (!category) {
+        throw new Error("Category not found.");
+    }
+
+    const duplicate =
+        await Category.getCategoryByNameExcludingId(
+            data.name,
+            id
+        );
+
+    if (duplicate) {
+        throw new Error("Category name already exists.");
+    }
+
+    await Category.updateCategory(id, data);
+
+    return await Category.getCategoryById(id);
+
+};
+
 module.exports = {
     getCategories,
     getCategory,
-    createCategory
+    createCategory,
+    updateCategory
 };

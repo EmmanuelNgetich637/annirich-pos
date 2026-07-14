@@ -36,5 +36,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
     createCategoryValidation,
+    updateCategoryValidation: createCategoryValidation,
     validate
 };

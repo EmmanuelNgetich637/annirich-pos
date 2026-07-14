@@ -31,7 +31,45 @@ const getCategoryById = async (id) => {
 
 };
 
+const getCategoryByName = async (name) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM categories
+        WHERE LOWER(name)=LOWER(?)
+        LIMIT 1
+        `,
+        [name]
+    );
+
+    return rows[0];
+
+};
+
+const createCategory = async (category) => {
+
+    const { name, description } = category;
+
+    const [result] = await db.query(
+        `
+        INSERT INTO categories
+        (name, description)
+        VALUES (?, ?)
+        `,
+        [
+            name,
+            description || null
+        ]
+    );
+
+    return result.insertId;
+
+};
+
 module.exports = {
     getAllCategories,
-    getCategoryById
+    getCategoryById,
+    getCategoryByName,
+    createCategory
 };

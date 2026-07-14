@@ -5,6 +5,11 @@ const router = express.Router();
 const categoryController =
 require("../controllers/categoryController");
 
+const {
+    createCategoryValidation,
+    validate
+} = require("../validators/categoryValidator");
+
 const authenticate =
 require("../middleware/authMiddleware");
 
@@ -23,6 +28,15 @@ router.get(
     authenticate,
     authorize("admin", "manager", "cashier"),
     categoryController.getCategory
+);
+
+router.post(
+    "/",
+    authenticate,
+    authorize("admin", "manager"),
+    createCategoryValidation,
+    validate,
+    categoryController.createCategory
 );
 
 module.exports = router;

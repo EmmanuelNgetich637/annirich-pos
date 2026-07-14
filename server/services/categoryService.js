@@ -18,7 +18,22 @@ const getCategory = async (id) => {
 
 };
 
+const createCategory = async (data) => {
+
+    const exists = await Category.getCategoryByName(data.name);
+
+    if (exists) {
+        throw new Error("Category already exists.");
+    }
+
+    const id = await Category.createCategory(data);
+
+    return await Category.getCategoryById(id);
+
+};
+
 module.exports = {
     getCategories,
-    getCategory
+    getCategory,
+    createCategory
 };

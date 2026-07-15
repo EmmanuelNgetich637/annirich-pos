@@ -1,4 +1,5 @@
 const Category = require("../models/categoryModel");
+const Product = require("../models/productModel");
 
 const getCategories = async () => {
 
@@ -56,9 +57,31 @@ const updateCategory = async (id, data) => {
 
 };
 
+const deleteCategory = async (id) => {
+
+    const category = await Category.getCategoryById(id);
+
+    if (!category) {
+        throw new Error("Category not found.");
+    }
+
+    const totalProducts =
+        await Product.countProductsByCategory(id);
+
+    if (totalProducts > 0) {
+        throw new Error(
+            "Cannot delete category. Active products are assigned to it."
+        );
+    }
+
+    await Category.deleteCategory(id);
+
+};
+
 module.exports = {
     getCategories,
     getCategory,
     createCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 };

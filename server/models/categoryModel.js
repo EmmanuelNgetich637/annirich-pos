@@ -107,11 +107,27 @@ const updateCategory = async (id, category) => {
 
 };
 
+const deleteCategory = async (id) => {
+
+    const [result] = await db.query(
+        `
+        UPDATE categories
+        SET status='inactive'
+        WHERE id=?
+        `,
+        [id]
+    );
+
+    return result;
+
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,
     getCategoryByName,
     getCategoryByNameExcludingId,
     createCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 };

@@ -299,6 +299,22 @@ const getProductStatistics = async () => {
 
 };
 
+const countProductsByCategory = async (categoryId) => {
+
+    const [[result]] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM products
+        WHERE category_id = ?
+        AND status = 'active'
+        `,
+        [categoryId]
+    );
+
+    return result.total;
+
+};
+
 module.exports = {
     getAllProducts,
     getProductById,
@@ -309,5 +325,6 @@ module.exports = {
     getProductsPaginated,
     updateProductImage,
     getLowStockProducts,
-    getProductStatistics
+    getProductStatistics,
+    countProductsByCategory
 };

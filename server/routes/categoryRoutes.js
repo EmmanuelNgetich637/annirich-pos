@@ -49,4 +49,11 @@ router.put(
     categoryController.updateCategory
 );
 
+router.delete(
+    "/:id",
+    authenticate,
+    authorize("admin"),
+    categoryController.deleteCategory
+);
+
 module.exports = router;

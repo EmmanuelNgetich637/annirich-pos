@@ -122,6 +122,31 @@ const deleteCategory = async (id) => {
 
 };
 
+const searchCategories = async (searchTerm) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM categories
+        WHERE
+            status='active'
+        AND
+        (
+            name LIKE ?
+            OR description LIKE ?
+        )
+        ORDER BY name ASC
+        `,
+        [
+            `%${searchTerm}%`,
+            `%${searchTerm}%`
+        ]
+    );
+
+    return rows;
+
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,
@@ -129,5 +154,6 @@ module.exports = {
     getCategoryByNameExcludingId,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    searchCategories
 };

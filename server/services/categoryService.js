@@ -78,10 +78,17 @@ const deleteCategory = async (id) => {
 
 };
 
+const searchCategories = async (query) => {
+
+    return await Category.searchCategories(query);
+
+};
+
 module.exports = {
     getCategories,
     getCategory,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    searchCategories
 };

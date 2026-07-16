@@ -90,11 +90,21 @@ const searchSuppliers = async (query) => {
 
 };
 
+const getSuppliersPaginated = async (page, limit) => {
+
+    return await Supplier.getSuppliersPaginated(
+        page,
+        limit
+    );
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
     updateSupplier,
     deleteSupplier,
-    searchSuppliers
+    searchSuppliers,
+    getSuppliersPaginated
 };

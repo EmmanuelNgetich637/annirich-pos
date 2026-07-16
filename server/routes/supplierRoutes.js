@@ -31,6 +31,13 @@ router.get(
 );
 
 router.get(
+    "/page/list",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    supplierController.getSuppliersPaginated
+);
+
+router.get(
     "/:id",
     authenticate,
     authorize("admin", "manager", "cashier"),

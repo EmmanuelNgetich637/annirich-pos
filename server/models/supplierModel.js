@@ -168,6 +168,40 @@ const searchSuppliers = async (searchTerm) => {
 
 };
 
+const getSuppliersPaginated = async (page = 1, limit = 10) => {
+
+    const offset = (page - 1) * limit;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM suppliers
+        WHERE status = 'active'
+        ORDER BY name ASC
+        LIMIT ?
+        OFFSET ?
+        `,
+        [
+            Number(limit),
+            Number(offset)
+        ]
+    );
+
+    const [[count]] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM suppliers
+        WHERE status = 'active'
+        `
+    );
+
+    return {
+        suppliers: rows,
+        total: count.total
+    };
+
+};
+
 module.exports = {
     getAllSuppliers,
     getSupplierById,
@@ -176,5 +210,6 @@ module.exports = {
     createSupplier,
     updateSupplier,
     deleteSupplier,
-    searchSuppliers
+    searchSuppliers,
+    getSuppliersPaginated
 };

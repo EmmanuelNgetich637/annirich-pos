@@ -178,11 +178,56 @@ const searchSuppliers = async (req, res) => {
 
 };
 
+const getSuppliersPaginated = async (req, res) => {
+
+    try {
+
+        const page =
+            Math.max(parseInt(req.query.page) || 1, 1);
+
+        const limit =
+            Math.min(
+                Math.max(parseInt(req.query.limit) || 10, 1),
+                100
+            );
+
+        const result =
+            await supplierService.getSuppliersPaginated(
+                page,
+                limit
+            );
+
+        res.json({
+
+            success: true,
+            page,
+            limit,
+            total: result.total,
+            totalPages: Math.ceil(result.total / limit),
+            count: result.suppliers.length,
+            data: result.suppliers
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
     updateSupplier,
     deleteSupplier,
-    searchSuppliers
+    searchSuppliers,
+    getSuppliersPaginated
 };

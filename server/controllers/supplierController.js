@@ -51,7 +51,73 @@ const getSupplier = async (req, res) => {
 
 };
 
+const createSupplier = async (req, res) => {
+
+    try {
+
+        const supplier =
+            await supplierService.createSupplier(req.body);
+
+        res.status(201).json({
+
+            success: true,
+            message: "Supplier created successfully.",
+            data: supplier
+
+        });
+
+    } catch (error) {
+
+        res.status(400).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
+const updateSupplier = async (req, res) => {
+
+    try {
+
+        const supplier =
+            await supplierService.updateSupplier(
+                req.params.id,
+                req.body
+            );
+
+        res.json({
+
+            success: true,
+            message: "Supplier updated successfully.",
+            data: supplier
+
+        });
+
+    } catch (error) {
+
+        const status =
+            error.message === "Supplier not found."
+                ? 404
+                : 400;
+
+        res.status(status).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getSuppliers,
-    getSupplier
+    getSupplier,
+    createSupplier,
+    updateSupplier
 };

@@ -18,7 +18,48 @@ const getSupplier = async (id) => {
 
 };
 
+const createSupplier = async (data) => {
+
+    const exists =
+        await Supplier.getSupplierByName(data.name);
+
+    if (exists) {
+        throw new Error("Supplier already exists.");
+    }
+
+    const id =
+        await Supplier.createSupplier(data);
+
+    return await Supplier.getSupplierById(id);
+
+};
+
+const updateSupplier = async (id, data) => {
+
+    const supplier =
+        await Supplier.getSupplierById(id);
+
+    if (!supplier) {
+        throw new Error("Supplier not found.");
+    }
+
+    const duplicate =
+        await Supplier.getSupplierByNameExcludingId(
+            data.name,
+            id
+        );
+
+    if (duplicate) {
+        throw new Error("Supplier name already exists.");
+    }
+
+    return await Supplier.updateSupplier(id, data);
+
+};
+
 module.exports = {
     getSuppliers,
-    getSupplier
+    getSupplier,
+    createSupplier,
+    updateSupplier
 };

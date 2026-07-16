@@ -18,4 +18,11 @@ router.get(
     supplierController.getSuppliers
 );
 
+router.get(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    supplierController.getSupplier
+);
+
 module.exports = router;

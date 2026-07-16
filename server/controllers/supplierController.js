@@ -28,6 +28,30 @@ const getSuppliers = async (req, res) => {
 
 };
 
+const getSupplier = async (req, res) => {
+
+    try {
+
+        const supplier =
+            await supplierService.getSupplier(req.params.id);
+
+        res.json({
+            success: true,
+            data: supplier
+        });
+
+    } catch (error) {
+
+        res.status(404).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
 module.exports = {
-    getSuppliers
+    getSuppliers,
+    getSupplier
 };

@@ -169,11 +169,84 @@ const searchCategories = async (req, res) => {
 
 };
 
+const getCategoriesPaginated = async (req, res) => {
+
+    try {
+
+        const page =
+            Math.max(parseInt(req.query.page) || 1, 1);
+
+        const limit =
+            Math.min(
+                Math.max(parseInt(req.query.limit) || 10, 1),
+                100
+            );
+
+        const result =
+            await categoryService.getCategoriesPaginated(
+                page,
+                limit
+            );
+
+        res.json({
+
+            success: true,
+            page,
+            limit,
+            total: result.total,
+            totalPages: Math.ceil(result.total / limit),
+            count: result.categories.length,
+            data: result.categories
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
+const getCategoryStatistics = async (req, res) => {
+
+    try {
+
+        const stats =
+            await categoryService.getCategoryStatistics();
+
+        res.json({
+
+            success: true,
+            data: stats
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCategories,
     getCategory,
     createCategory,
     updateCategory,
     deleteCategory,
-    searchCategories
+    searchCategories,
+    getCategoriesPaginated,
+    getCategoryStatistics
 };

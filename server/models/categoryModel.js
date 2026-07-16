@@ -147,6 +147,79 @@ const searchCategories = async (searchTerm) => {
 
 };
 
+const getCategoriesPaginated = async (page = 1, limit = 10) => {
+
+    const offset = (page - 1) * limit;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM categories
+        WHERE status='active'
+        ORDER BY name ASC
+        LIMIT ?
+        OFFSET ?
+        `,
+        [
+            Number(limit),
+            Number(offset)
+        ]
+    );
+
+    const [[count]] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM categories
+        WHERE status='active'
+        `
+    );
+
+    return {
+        categories: rows,
+        total: count.total
+    };
+
+};
+
+const getCategoryStatistics = async () => {
+
+    const [[total]] = await db.query(`
+        SELECT COUNT(*) AS totalCategories
+        FROM categories
+    `);
+
+    const [[active]] = await db.query(`
+        SELECT COUNT(*) AS activeCategories
+        FROM categories
+        WHERE status='active'
+    `);
+
+    const [[inactive]] = await db.query(`
+        SELECT COUNT(*) AS inactiveCategories
+        FROM categories
+        WHERE status='inactive'
+    `);
+
+    const [[withProducts]] = await db.query(`
+        SELECT COUNT(DISTINCT category_id) AS categoriesWithProducts
+        FROM products
+        WHERE status='active'
+    `);
+
+    const emptyCategories =
+        active.activeCategories -
+        withProducts.categoriesWithProducts;
+
+    return {
+        ...total,
+        ...active,
+        ...inactive,
+        ...withProducts,
+        emptyCategories
+    };
+
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,
@@ -155,5 +228,7 @@ module.exports = {
     createCategory,
     updateCategory,
     deleteCategory,
-    searchCategories
+    searchCategories,
+    getCategoriesPaginated,
+    getCategoryStatistics
 };

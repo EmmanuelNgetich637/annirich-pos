@@ -34,6 +34,20 @@ router.get(
 );
 
 router.get(
+    "/page/list",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    categoryController.getCategoriesPaginated
+);
+
+router.get(
+    "/stats",
+    authenticate,
+    authorize("admin", "manager"),
+    categoryController.getCategoryStatistics
+);
+
+router.get(
     "/:id",
     authenticate,
     authorize("admin", "manager", "cashier"),

@@ -84,11 +84,28 @@ const searchCategories = async (query) => {
 
 };
 
+const getCategoriesPaginated = async (page, limit) => {
+
+    return await Category.getCategoriesPaginated(
+        page,
+        limit
+    );
+
+};
+
+const getCategoryStatistics = async () => {
+
+    return await Category.getCategoryStatistics();
+
+};
+
 module.exports = {
     getCategories,
     getCategory,
     createCategory,
     updateCategory,
     deleteCategory,
-    searchCategories
+    searchCategories,
+    getCategoriesPaginated,
+    getCategoryStatistics
 };

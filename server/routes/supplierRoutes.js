@@ -48,4 +48,11 @@ router.put(
     supplierController.updateSupplier
 );
 
+router.delete(
+    "/:id",
+    authenticate,
+    authorize("admin"),
+    supplierController.deleteSupplier
+);
+
 module.exports = router;

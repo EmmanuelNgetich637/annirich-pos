@@ -124,11 +124,25 @@ const updateSupplier = async (id, supplier) => {
     return await getSupplierById(id);
 };
 
+const deleteSupplier = async (id) => {
+
+    await db.query(
+        `
+        UPDATE suppliers
+        SET status='inactive'
+        WHERE id=?
+        `,
+        [id]
+    );
+
+};
+
 module.exports = {
     getAllSuppliers,
     getSupplierById,
     getSupplierByName,
     getSupplierByNameExcludingId,
     createSupplier,
-    updateSupplier
+    updateSupplier,
+    deleteSupplier
 };

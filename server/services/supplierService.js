@@ -1,5 +1,8 @@
 const Supplier = require("../models/supplierModel");
 
+const Purchase =
+require("../models/purchaseModel");
+
 const getSuppliers = async () => {
 
     return await Supplier.getAllSuppliers();
@@ -57,9 +60,34 @@ const updateSupplier = async (id, data) => {
 
 };
 
+const deleteSupplier = async (id) => {
+
+    const supplier =
+        await Supplier.getSupplierById(id);
+
+    if (!supplier) {
+        throw new Error("Supplier not found.");
+    }
+
+    const purchases =
+        await Purchase.countPurchasesBySupplier(id);
+
+    if (purchases > 0) {
+
+        throw new Error(
+            "Cannot delete supplier. Purchase history exists."
+        );
+
+    }
+
+    await Supplier.deleteSupplier(id);
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
-    updateSupplier
+    updateSupplier,
+    deleteSupplier
 };

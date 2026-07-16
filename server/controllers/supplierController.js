@@ -115,9 +115,43 @@ const updateSupplier = async (req, res) => {
 
 };
 
+const deleteSupplier = async (req, res) => {
+
+    try {
+
+        await supplierService.deleteSupplier(
+            req.params.id
+        );
+
+        res.json({
+
+            success: true,
+            message: "Supplier deleted successfully."
+
+        });
+
+    } catch (error) {
+
+        const status =
+            error.message === "Supplier not found."
+                ? 404
+                : 400;
+
+        res.status(status).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
-    updateSupplier
+    updateSupplier,
+    deleteSupplier
 };

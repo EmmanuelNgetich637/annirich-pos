@@ -84,10 +84,17 @@ const deleteSupplier = async (id) => {
 
 };
 
+const searchSuppliers = async (query) => {
+
+    return await Supplier.searchSuppliers(query);
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
     updateSupplier,
-    deleteSupplier
+    deleteSupplier,
+    searchSuppliers
 };

@@ -148,10 +148,41 @@ const deleteSupplier = async (req, res) => {
 
 };
 
+const searchSuppliers = async (req, res) => {
+
+    try {
+
+        const q = req.query.q || "";
+
+        const suppliers =
+            await supplierService.searchSuppliers(q);
+
+        res.json({
+
+            success: true,
+            count: suppliers.length,
+            data: suppliers
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getSuppliers,
     getSupplier,
     createSupplier,
     updateSupplier,
-    deleteSupplier
+    deleteSupplier,
+    searchSuppliers
 };

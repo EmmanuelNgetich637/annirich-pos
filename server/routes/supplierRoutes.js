@@ -24,6 +24,13 @@ router.get(
 );
 
 router.get(
+    "/search",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    supplierController.searchSuppliers
+);
+
+router.get(
     "/:id",
     authenticate,
     authorize("admin", "manager", "cashier"),

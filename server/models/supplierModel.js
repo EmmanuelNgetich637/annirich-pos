@@ -137,6 +137,37 @@ const deleteSupplier = async (id) => {
 
 };
 
+const searchSuppliers = async (searchTerm) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM suppliers
+        WHERE
+            status='active'
+        AND
+        (
+            LOWER(name) LIKE LOWER(?)
+            OR LOWER(contact_person) LIKE LOWER(?)
+            OR LOWER(phone) LIKE LOWER(?)
+            OR LOWER(email) LIKE LOWER(?)
+            OR LOWER(address) LIKE LOWER(?)
+        )
+        ORDER BY name ASC
+        `,
+        [
+            `%${searchTerm}%`,
+            `%${searchTerm}%`,
+            `%${searchTerm}%`,
+            `%${searchTerm}%`,
+            `%${searchTerm}%`
+        ]
+    );
+
+    return rows;
+
+};
+
 module.exports = {
     getAllSuppliers,
     getSupplierById,
@@ -144,5 +175,6 @@ module.exports = {
     getSupplierByNameExcludingId,
     createSupplier,
     updateSupplier,
-    deleteSupplier
+    deleteSupplier,
+    searchSuppliers
 };

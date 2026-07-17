@@ -13,11 +13,15 @@ const supplierRoutes = require("./routes/supplierRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 
+const db = require("./config/db");
+
 // Load environment variables
 dotenv.config();
 
-// Create Express app
+
+// Create Express application
 const app = express();
+
 
 // Middleware
 app.use(cors());
@@ -25,41 +29,149 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+
+// Static uploads folder
 app.use(
     "/uploads",
-    express.static(path.join(__dirname, "uploads"))
+    express.static(
+        path.join(__dirname, "uploads")
+    )
 );
 
-// Root Route
+
+// Root API check
 app.get("/", (req, res) => {
+
     res.status(200).json({
+
         success: true,
-        message: "Welcome to Annirich Hardware POS API",
+
+        message:
+        "Welcome to Annirich Hardware POS API"
+
     });
+
 });
+
 
 // API Routes
+
 app.use("/api/test", testRoutes);
+
 app.use("/api/auth", authRoutes);
+
 app.use("/api/users", userRoutes);
+
 app.use("/api/categories", categoryRoutes);
+
 app.use("/api/products", productRoutes);
+
 app.use("/api/suppliers", supplierRoutes);
+
 app.use("/api/customers", customerRoutes);
+
 app.use("/api/purchases", purchaseRoutes);
 
-// Handle unknown routes
+
+
+// Unknown route handler
+
 app.use((req, res) => {
+
     res.status(404).json({
+
         success: false,
-        message: "Route not found",
+
+        message:
+        "Route not found"
+
     });
+
 });
 
-// Server Port
-const PORT = process.env.PORT || 5000;
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+// Global error handler
+
+app.use((err, req, res, next) => {
+
+    console.error(err.stack);
+
+
+    res.status(500).json({
+
+        success: false,
+
+        message:
+        err.message || "Internal Server Error"
+
+    });
+
 });
+
+
+
+// Server port
+
+const PORT =
+process.env.PORT || 5000;
+
+
+
+// Start server
+
+const server = app.listen(
+    PORT,
+    async () => {
+
+        console.log(
+            `🚀 Server running on http://localhost:${PORT}`
+        );
+
+
+        try {
+
+            const connection =
+                await db.getConnection();
+
+
+            console.log(
+                "✅ MySQL database connected"
+            );
+
+
+            connection.release();
+
+
+        } catch(error) {
+
+            console.error(
+                "❌ Database connection failed:",
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+
+// Graceful shutdown
+
+process.on(
+    "SIGINT",
+    () => {
+
+        server.close(() => {
+
+            console.log(
+                "Server closed"
+            );
+
+            process.exit(0);
+
+        });
+
+    }
+);

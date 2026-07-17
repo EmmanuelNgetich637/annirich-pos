@@ -1,209 +1,315 @@
 const db = require("../config/db");
 
-/*
-|--------------------------------------------------------------------------
-| Create Purchase
-|--------------------------------------------------------------------------
-|
-| This function will:
-|
-| 1. Begin Transaction
-| 2. Insert Purchase
-| 3. Insert Purchase Items
-| 4. Update Product Stock
-| 5. Create Stock Movement
-| 6. Commit Transaction
-|
-| If anything fails:
-|
-| Rollback everything.
-|
-*/
 
-const createPurchase = async (purchaseData, userId) => {
+// Create purchase
+const createPurchase = async (purchase, connection = db) => {
 
-    const connection = await db.getConnection();
+    const {
+        supplier_id,
+        invoice_number,
+        total_amount,
+        remarks,
+        created_by
+    } = purchase;
 
-    try {
 
-        await connection.beginTransaction();
-
-        const {
+    const [result] = await connection.query(
+        `
+        INSERT INTO purchases
+        (
             supplier_id,
             invoice_number,
+            total_amount,
             remarks,
-            items
-        } = purchaseData;
+            created_by
+        )
+        VALUES (?, ?, ?, ?, ?)
+        `,
+        [
+            supplier_id,
+            invoice_number || null,
+            total_amount,
+            remarks || null,
+            created_by
+        ]
+    );
 
-        // Calculate Total Amount
 
-        let totalAmount = 0;
+    return result.insertId;
 
-        for (const item of items) {
+};
 
-            totalAmount +=
-                item.quantity * item.buying_price;
 
-        }
+// Create purchase items
+const createPurchaseItems = async (
+    purchase_id,
+    items,
+    connection = db
+) => {
 
-        // Insert Purchase
 
-        const [purchaseResult] =
-            await connection.query(
-                `
-                INSERT INTO purchases
-                (
-                    supplier_id,
-                    invoice_number,
-                    total_amount,
-                    status,
-                    remarks,
-                    created_by
-                )
-                VALUES (?, ?, ?, 'Completed', ?, ?)
-                `,
-                [
-                    supplier_id,
-                    invoice_number || null,
-                    totalAmount,
-                    remarks || null,
-                    userId
-                ]
-            );
+    for (const item of items) {
 
-        const purchaseId =
-            purchaseResult.insertId;
+        const subtotal =
+            item.quantity * item.buying_price;
 
-        /*
-        ==================================================
-        Purchase Items
-        ==================================================
-        */
 
-        for (const item of items) {
-
-            const subtotal =
-                item.quantity * item.buying_price;
-
-            // Insert Purchase Item
-
-            await connection.query(
-                `
-                INSERT INTO purchase_items
-                (
-                    purchase_id,
-                    product_id,
-                    quantity,
-                    buying_price,
-                    subtotal
-                )
-                VALUES (?, ?, ?, ?, ?)
-                `,
-                [
-                    purchaseId,
-                    item.product_id,
-                    item.quantity,
-                    item.buying_price,
-                    subtotal
-                ]
-            );
-
-            /*
-            ==================================================
-            Update Product Quantity
-            ==================================================
-            */
-
-            await connection.query(
-                `
-                UPDATE products
-                SET quantity = quantity + ?
-                WHERE id = ?
-                `,
-                [
-                    item.quantity,
-                    item.product_id
-                ]
-            );
-
-            /*
-            ==================================================
-            Get New Balance
-            ==================================================
-            */
-
-            const [product] =
-                await connection.query(
-                    `
-                    SELECT quantity
-                    FROM products
-                    WHERE id = ?
-                    `,
-                    [item.product_id]
-                );
-
-            const balance =
-                product[0].quantity;
-
-            /*
-            ==================================================
-            Stock Movement
-            ==================================================
-            */
-
-            await connection.query(
-                `
-                INSERT INTO stock_movements
-                (
-                    product_id,
-                    reference_id,
-                    reference_type,
-                    movement_type,
-                    quantity,
-                    balance_after,
-                    remarks
-                )
-                VALUES
-                (?, ?, ?, ?, ?, ?, ?)
-                `,
-                [
-                    item.product_id,
-                    purchaseId,
-                    "Purchase",
-                    "Stock In",
-                    item.quantity,
-                    balance,
-                    "Purchase Stock"
-                ]
-            );
-
-        }
-
-        await connection.commit();
-
-        return {
-
-            purchaseId,
-            totalAmount
-
-        };
-
-    } catch (error) {
-
-        await connection.rollback();
-
-        throw error;
-
-    } finally {
-
-        connection.release();
+        await connection.query(
+            `
+            INSERT INTO purchase_items
+            (
+                purchase_id,
+                product_id,
+                quantity,
+                buying_price,
+                subtotal
+            )
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+                purchase_id,
+                item.product_id,
+                item.quantity,
+                item.buying_price,
+                subtotal
+            ]
+        );
 
     }
 
 };
 
+
+// Get all purchases
+const getAllPurchases = async () => {
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            p.*,
+            s.name AS supplier_name
+        FROM purchases p
+        LEFT JOIN suppliers s
+            ON p.supplier_id = s.id
+        ORDER BY p.id DESC
+        `
+    );
+
+
+    return rows;
+
+};
+
+
+// Get purchase by ID
+const getPurchaseById = async (id) => {
+
+
+    const [purchase] = await db.query(
+        `
+        SELECT
+            p.*,
+            s.name AS supplier_name
+        FROM purchases p
+        LEFT JOIN suppliers s
+            ON p.supplier_id = s.id
+        WHERE p.id = ?
+        `,
+        [id]
+    );
+
+
+    if (!purchase[0]) {
+        return null;
+    }
+
+
+    const [items] = await db.query(
+        `
+        SELECT
+            pi.*,
+            pr.name AS product_name
+        FROM purchase_items pi
+        LEFT JOIN products pr
+            ON pi.product_id = pr.id
+        WHERE pi.purchase_id = ?
+        `,
+        [id]
+    );
+
+
+    return {
+        ...purchase[0],
+        items
+    };
+
+};
+
+
+// Search purchases
+const searchPurchases = async (keyword) => {
+
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            p.*,
+            s.name AS supplier_name
+        FROM purchases p
+        LEFT JOIN suppliers s
+            ON p.supplier_id = s.id
+        WHERE
+            p.invoice_number LIKE ?
+            OR s.name LIKE ?
+        ORDER BY p.id DESC
+        `,
+        [
+            `%${keyword}%`,
+            `%${keyword}%`
+        ]
+    );
+
+
+    return rows;
+
+};
+
+
+// Pagination
+const getPurchasesPaginated = async (
+    page = 1,
+    limit = 10
+) => {
+
+
+    const offset =
+        (page - 1) * limit;
+
+
+    const [rows] = await db.query(
+        `
+        SELECT
+            p.*,
+            s.name AS supplier_name
+        FROM purchases p
+        LEFT JOIN suppliers s
+            ON p.supplier_id = s.id
+        ORDER BY p.id DESC
+        LIMIT ?
+        OFFSET ?
+        `,
+        [
+            Number(limit),
+            Number(offset)
+        ]
+    );
+
+
+    const [[count]] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM purchases
+        `
+    );
+
+
+    return {
+        purchases: rows,
+        total: count.total
+    };
+
+};
+
+
+// Purchase statistics
+const getPurchaseStatistics = async () => {
+
+
+    const [[stats]] = await db.query(
+        `
+        SELECT
+
+        COUNT(*) AS totalPurchases,
+
+        COALESCE(
+            SUM(total_amount),
+            0
+        ) AS totalAmount,
+
+        COUNT(
+            CASE 
+            WHEN status='Completed'
+            THEN 1
+            END
+        ) AS completedPurchases,
+
+        COUNT(
+            CASE 
+            WHEN status='Cancelled'
+            THEN 1
+            END
+        ) AS cancelledPurchases
+
+        FROM purchases
+        `
+    );
+
+
+    return stats;
+
+};
+
+
+// Count purchases by supplier
+const countPurchasesBySupplier = async (supplier_id) => {
+
+
+    const [[result]] = await db.query(
+        `
+        SELECT COUNT(*) AS count
+        FROM purchases
+        WHERE supplier_id = ?
+        `,
+        [supplier_id]
+    );
+
+
+    return result.count;
+
+};
+
+const getPurchaseByInvoiceNumber = async (invoice_number) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM purchases
+        WHERE invoice_number = ?
+        LIMIT 1
+        `,
+        [invoice_number]
+    );
+
+    return rows[0];
+
+};
+
+
 module.exports = {
 
-    createPurchase
+    createPurchase,
+    createPurchaseItems,
+
+    getAllPurchases,
+    getPurchaseById,
+
+    searchPurchases,
+    getPurchasesPaginated,
+
+    getPurchaseStatistics,
+
+    countPurchasesBySupplier,
+
+    getPurchaseByInvoiceNumber
 
 };

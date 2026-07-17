@@ -1,32 +1,28 @@
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
+
+
+// Purchase validation rules
 
 const createPurchaseValidation = [
 
     body("supplier_id")
         .notEmpty()
         .withMessage("Supplier is required.")
-        .isInt({ min: 1 })
-        .withMessage("Supplier ID must be a valid integer."),
+        .isInt()
+        .withMessage("Supplier ID must be a number."),
 
-    body("invoice_number")
-        .optional()
-        .isLength({ max: 100 })
-        .withMessage("Invoice number cannot exceed 100 characters."),
-
-    body("remarks")
-        .optional()
-        .isLength({ max: 500 })
-        .withMessage("Remarks cannot exceed 500 characters."),
 
     body("items")
         .isArray({ min: 1 })
-        .withMessage("Purchase must contain at least one item."),
+        .withMessage("Purchase items are required."),
+
 
     body("items.*.product_id")
         .notEmpty()
-        .withMessage("Product is required.")
-        .isInt({ min: 1 })
-        .withMessage("Product ID must be valid."),
+        .withMessage("Product ID is required.")
+        .isInt()
+        .withMessage("Product ID must be a number."),
+
 
     body("items.*.quantity")
         .notEmpty()
@@ -34,14 +30,48 @@ const createPurchaseValidation = [
         .isInt({ min: 1 })
         .withMessage("Quantity must be greater than zero."),
 
+
     body("items.*.buying_price")
         .notEmpty()
         .withMessage("Buying price is required.")
-        .isFloat({ min: 0.01 })
-        .withMessage("Buying price must be greater than zero.")
+        .isFloat({ min: 0 })
+        .withMessage("Invalid buying price.")
 
 ];
 
+
+
+// Validation middleware
+
+const validate = (req, res, next) => {
+
+    const errors =
+        validationResult(req);
+
+
+    if (!errors.isEmpty()) {
+
+        return res.status(400).json({
+
+            success: false,
+
+            errors: errors.array()
+
+        });
+
+    }
+
+
+    next();
+
+};
+
+
+
 module.exports = {
-    createPurchaseValidation
+
+    createPurchaseValidation,
+
+    validate
+
 };

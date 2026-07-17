@@ -90,8 +90,45 @@ const createCustomer = async (req, res) => {
 
 };
 
+const updateCustomer = async (req, res) => {
+
+    try {
+
+        const customer =
+            await customerService.updateCustomer(
+                req.params.id,
+                req.body
+            );
+
+        res.json({
+
+            success: true,
+            message: "Customer updated successfully.",
+            data: customer
+
+        });
+
+    } catch (error) {
+
+        const status =
+            error.message === "Customer not found."
+                ? 404
+                : 400;
+
+        res.status(status).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
-    createCustomer
+    createCustomer,
+    updateCustomer
 };

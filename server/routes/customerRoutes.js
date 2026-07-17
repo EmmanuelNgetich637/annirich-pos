@@ -39,4 +39,13 @@ router.post(
     customerController.createCustomer
 );
 
+router.put(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager"),
+    createCustomerValidation,
+    validate,
+    customerController.updateCustomer
+);
+
 module.exports = router;

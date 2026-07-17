@@ -98,10 +98,81 @@ const createCustomer = async (customer) => {
 
 };
 
+const getCustomerByPhoneExcludingId = async (phone, id) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE phone = ?
+        AND id != ?
+        LIMIT 1
+        `,
+        [phone, id]
+    );
+
+    return rows[0];
+
+};
+
+const getCustomerByEmailExcludingId = async (email, id) => {
+
+    if (!email) return null;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE email = ?
+        AND id != ?
+        LIMIT 1
+        `,
+        [email, id]
+    );
+
+    return rows[0];
+
+};
+
+const updateCustomer = async (id, customer) => {
+
+    const {
+        name,
+        phone,
+        email,
+        address
+    } = customer;
+
+    await db.query(
+        `
+        UPDATE customers
+        SET
+            name = ?,
+            phone = ?,
+            email = ?,
+            address = ?
+        WHERE id = ?
+        `,
+        [
+            name,
+            phone,
+            email || null,
+            address || null,
+            id
+        ]
+    );
+
+    return await getCustomerById(id);
+
+};
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
     getCustomerByPhone,
     getCustomerByEmail,
-    createCustomer
+    getCustomerByPhoneExcludingId,
+    getCustomerByEmailExcludingId,
+    createCustomer,
+    updateCustomer
 };

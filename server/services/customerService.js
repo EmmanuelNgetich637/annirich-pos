@@ -46,8 +46,46 @@ const createCustomer = async (data) => {
 
 };
 
+const updateCustomer = async (id, data) => {
+
+    const customer =
+        await Customer.getCustomerById(id);
+
+    if (!customer) {
+        throw new Error("Customer not found.");
+    }
+
+    const phoneExists =
+        await Customer.getCustomerByPhoneExcludingId(
+            data.phone,
+            id
+        );
+
+    if (phoneExists) {
+        throw new Error("Phone number already exists.");
+    }
+
+    if (data.email) {
+
+        const emailExists =
+            await Customer.getCustomerByEmailExcludingId(
+                data.email,
+                id
+            );
+
+        if (emailExists) {
+            throw new Error("Email already exists.");
+        }
+
+    }
+
+    return await Customer.updateCustomer(id, data);
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
-    createCustomer
+    createCustomer,
+    updateCustomer
 };

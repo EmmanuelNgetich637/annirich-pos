@@ -32,7 +32,76 @@ const getCustomerById = async (id) => {
 
 };
 
+const getCustomerByPhone = async (phone) => {
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE phone = ?
+        LIMIT 1
+        `,
+        [phone]
+    );
+
+    return rows[0];
+
+};
+
+const getCustomerByEmail = async (email) => {
+
+    if (!email) return null;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE email = ?
+        LIMIT 1
+        `,
+        [email]
+    );
+
+    return rows[0];
+
+};
+
+const createCustomer = async (customer) => {
+
+    const {
+        name,
+        phone,
+        email,
+        address
+    } = customer;
+
+    const [result] = await db.query(
+        `
+        INSERT INTO customers
+        (
+            name,
+            phone,
+            email,
+            address
+        )
+        VALUES (?, ?, ?, ?)
+        `,
+        [
+            name,
+            phone,
+            email || null,
+            address || null
+        ]
+    );
+
+    return result.insertId;
+
+};
+
 module.exports = {
     getAllCustomers,
-    getCustomerById
+    getCustomerById,
+    getCustomerByPhone,
+    getCustomerByEmail,
+    createCustomer
 };

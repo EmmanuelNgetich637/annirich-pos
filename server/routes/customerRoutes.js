@@ -11,6 +11,11 @@ require("../middleware/authMiddleware");
 const authorize =
 require("../middleware/roleMiddleware");
 
+const {
+    createCustomerValidation,
+    validate
+} = require("../validators/customerValidator");
+
 router.get(
     "/",
     authenticate,
@@ -23,6 +28,15 @@ router.get(
     authenticate,
     authorize("admin", "manager", "cashier"),
     customerController.getCustomer
+);
+
+router.post(
+    "/",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    createCustomerValidation,
+    validate,
+    customerController.createCustomer
 );
 
 module.exports = router;

@@ -62,7 +62,36 @@ const getCustomer = async (req, res) => {
 
 };
 
+const createCustomer = async (req, res) => {
+
+    try {
+
+        const customer =
+            await customerService.createCustomer(req.body);
+
+        res.status(201).json({
+
+            success: true,
+            message: "Customer created successfully.",
+            data: customer
+
+        });
+
+    } catch (error) {
+
+        res.status(400).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
-    getCustomer
+    getCustomer,
+    createCustomer
 };

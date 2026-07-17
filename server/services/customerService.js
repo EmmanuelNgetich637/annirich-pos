@@ -99,10 +99,17 @@ const deleteCustomer = async (id) => {
 
 };
 
+const searchCustomers = async (keyword) => {
+
+    return await Customer.searchCustomers(keyword);
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    searchCustomers
 };

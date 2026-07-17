@@ -17,6 +17,13 @@ const {
 } = require("../validators/customerValidator");
 
 router.get(
+    "/search",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    customerController.searchCustomers
+);
+
+router.get(
     "/",
     authenticate,
     authorize("admin", "manager", "cashier"),

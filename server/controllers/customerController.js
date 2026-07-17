@@ -159,10 +159,41 @@ const deleteCustomer = async (req, res) => {
 
 };
 
+const searchCustomers = async (req, res) => {
+
+    try {
+
+        const keyword = req.query.keyword || "";
+
+        const customers =
+            await customerService.searchCustomers(keyword);
+
+        res.json({
+
+            success: true,
+            count: customers.length,
+            data: customers
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    searchCustomers
 };

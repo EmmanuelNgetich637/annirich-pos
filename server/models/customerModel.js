@@ -182,6 +182,33 @@ const deleteCustomer = async (id) => {
 
 };
 
+const searchCustomers = async (keyword) => {
+
+    const search = `%${keyword}%`;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE status = 'active'
+        AND (
+            name LIKE ?
+            OR phone LIKE ?
+            OR email LIKE ?
+        )
+        ORDER BY name ASC
+        `,
+        [
+            search,
+            search,
+            search
+        ]
+    );
+
+    return rows;
+
+};
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
@@ -191,5 +218,6 @@ module.exports = {
     getCustomerByEmailExcludingId,
     createCustomer,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    searchCustomers
 };

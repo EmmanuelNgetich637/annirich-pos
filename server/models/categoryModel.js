@@ -220,6 +220,8 @@ const getCategoryStatistics = async () => {
 
 };
 
+
+
 module.exports = {
     getAllCategories,
     getCategoryById,

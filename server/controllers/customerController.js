@@ -126,9 +126,43 @@ const updateCustomer = async (req, res) => {
 
 };
 
+const deleteCustomer = async (req, res) => {
+
+    try {
+
+        await customerService.deleteCustomer(
+            req.params.id
+        );
+
+        res.json({
+
+            success: true,
+            message: "Customer deleted successfully."
+
+        });
+
+    } catch (error) {
+
+        const status =
+            error.message === "Customer not found."
+                ? 404
+                : 400;
+
+        res.status(status).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
-    updateCustomer
+    updateCustomer,
+    deleteCustomer
 };

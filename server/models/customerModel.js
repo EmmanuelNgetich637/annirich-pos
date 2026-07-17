@@ -166,6 +166,22 @@ const updateCustomer = async (id, customer) => {
 
 };
 
+const deleteCustomer = async (id) => {
+
+    const [result] = await db.query(
+        `
+        UPDATE customers
+        SET status = 'inactive'
+        WHERE id = ?
+        AND status = 'active'
+        `,
+        [id]
+    );
+
+    return result.affectedRows;
+
+};
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
@@ -174,5 +190,6 @@ module.exports = {
     getCustomerByPhoneExcludingId,
     getCustomerByEmailExcludingId,
     createCustomer,
-    updateCustomer
+    updateCustomer,
+    deleteCustomer
 };

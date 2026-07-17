@@ -48,4 +48,11 @@ router.put(
     customerController.updateCustomer
 );
 
+router.delete(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager"),
+    customerController.deleteCustomer
+);
+
 module.exports = router;

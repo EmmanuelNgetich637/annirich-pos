@@ -83,9 +83,26 @@ const updateCustomer = async (id, data) => {
 
 };
 
+const deleteCustomer = async (id) => {
+
+    const customer =
+        await Customer.getCustomerById(id);
+
+    if (!customer) {
+        throw new Error("Customer not found.");
+    }
+
+    const deleted =
+        await Customer.deleteCustomer(id);
+
+    return deleted;
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
-    updateCustomer
+    updateCustomer,
+    deleteCustomer
 };

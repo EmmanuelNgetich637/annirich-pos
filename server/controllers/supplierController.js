@@ -1,204 +1,134 @@
 const supplierService = require("../services/supplierService");
 
 const getSuppliers = async (req, res) => {
-
     try {
-
-        const suppliers =
-            await supplierService.getSuppliers();
+        const suppliers = await supplierService.getSuppliers();
 
         res.json({
-
             success: true,
             count: suppliers.length,
             data: suppliers
-
         });
-
     } catch (error) {
-
         res.status(500).json({
-
             success: false,
             message: error.message
-
         });
-
     }
-
 };
 
 const getSupplier = async (req, res) => {
-
     try {
-
-        const supplier =
-            await supplierService.getSupplier(req.params.id);
+        const supplier = await supplierService.getSupplier(req.params.id);
 
         res.json({
             success: true,
             data: supplier
         });
-
     } catch (error) {
-
         res.status(404).json({
             success: false,
             message: error.message
         });
-
     }
-
 };
 
 const createSupplier = async (req, res) => {
-
     try {
-
-        const supplier =
-            await supplierService.createSupplier(req.body);
+        const supplier = await supplierService.createSupplier(req.body);
 
         res.status(201).json({
-
             success: true,
             message: "Supplier created successfully.",
             data: supplier
-
         });
-
     } catch (error) {
-
         res.status(400).json({
-
             success: false,
             message: error.message
-
         });
-
     }
-
 };
 
 const updateSupplier = async (req, res) => {
-
     try {
-
-        const supplier =
-            await supplierService.updateSupplier(
-                req.params.id,
-                req.body
-            );
-
-        res.json({
-
-            success: true,
-            message: "Supplier updated successfully.",
-            data: supplier
-
-        });
-
-    } catch (error) {
-
-        const status =
-            error.message === "Supplier not found."
-                ? 404
-                : 400;
-
-        res.status(status).json({
-
-            success: false,
-            message: error.message
-
-        });
-
-    }
-
-};
-
-const deleteSupplier = async (req, res) => {
-
-    try {
-
-        await supplierService.deleteSupplier(
-            req.params.id
+        const supplier = await supplierService.updateSupplier(
+            req.params.id,
+            req.body
         );
 
         res.json({
-
             success: true,
-            message: "Supplier deleted successfully."
-
+            message: "Supplier updated successfully.",
+            data: supplier
         });
-
     } catch (error) {
-
         const status =
             error.message === "Supplier not found."
                 ? 404
                 : 400;
 
         res.status(status).json({
-
             success: false,
             message: error.message
-
         });
-
     }
+};
 
+const deleteSupplier = async (req, res) => {
+    try {
+        await supplierService.deleteSupplier(req.params.id);
+
+        res.json({
+            success: true,
+            message: "Supplier deleted successfully."
+        });
+    } catch (error) {
+        const status =
+            error.message === "Supplier not found."
+                ? 404
+                : 400;
+
+        res.status(status).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 const searchSuppliers = async (req, res) => {
-
     try {
-
         const q = req.query.q || "";
 
-        const suppliers =
-            await supplierService.searchSuppliers(q);
+        const suppliers = await supplierService.searchSuppliers(q);
 
         res.json({
-
             success: true,
             count: suppliers.length,
             data: suppliers
-
         });
-
     } catch (error) {
-
         res.status(500).json({
-
             success: false,
             message: error.message
-
         });
-
     }
-
 };
 
 const getSuppliersPaginated = async (req, res) => {
-
     try {
+        const page = Math.max(parseInt(req.query.page) || 1, 1);
+        const limit = Math.min(
+            Math.max(parseInt(req.query.limit) || 10, 1),
+            100
+        );
 
-        const page =
-            Math.max(parseInt(req.query.page) || 1, 1);
-
-        const limit =
-            Math.min(
-                Math.max(parseInt(req.query.limit) || 10, 1),
-                100
-            );
-
-        const result =
-            await supplierService.getSuppliersPaginated(
-                page,
-                limit
-            );
+        const result = await supplierService.getSuppliersPaginated(
+            page,
+            limit
+        );
 
         res.json({
-
             success: true,
             page,
             limit,
@@ -206,20 +136,29 @@ const getSuppliersPaginated = async (req, res) => {
             totalPages: Math.ceil(result.total / limit),
             count: result.suppliers.length,
             data: result.suppliers
-
         });
-
     } catch (error) {
-
         res.status(500).json({
-
             success: false,
             message: error.message
-
         });
-
     }
+};
 
+const getSupplierStatistics = async (req, res) => {
+    try {
+        const stats = await supplierService.getSupplierStatistics();
+
+        res.json({
+            success: true,
+            data: stats
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 module.exports = {
@@ -229,5 +168,6 @@ module.exports = {
     updateSupplier,
     deleteSupplier,
     searchSuppliers,
-    getSuppliersPaginated
+    getSuppliersPaginated,
+    getSupplierStatistics
 };

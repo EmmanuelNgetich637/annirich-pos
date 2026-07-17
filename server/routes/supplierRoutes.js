@@ -2,20 +2,22 @@ const express = require("express");
 
 const router = express.Router();
 
-const supplierController =
-require("../controllers/supplierController");
-
-const authenticate =
-require("../middleware/authMiddleware");
-
-const authorize =
-require("../middleware/roleMiddleware");
+const supplierController = require("../controllers/supplierController");
+const authenticate = require("../middleware/authMiddleware");
+const authorize = require("../middleware/roleMiddleware");
 
 const {
     createSupplierValidation,
     validate
 } = require("../validators/supplierValidator");
 
+/*
+|--------------------------------------------------------------------------
+| Supplier Routes
+|--------------------------------------------------------------------------
+*/
+
+// Get all suppliers
 router.get(
     "/",
     authenticate,
@@ -23,6 +25,7 @@ router.get(
     supplierController.getSuppliers
 );
 
+// Search suppliers
 router.get(
     "/search",
     authenticate,
@@ -30,6 +33,7 @@ router.get(
     supplierController.searchSuppliers
 );
 
+// Paginated suppliers
 router.get(
     "/page/list",
     authenticate,
@@ -37,6 +41,15 @@ router.get(
     supplierController.getSuppliersPaginated
 );
 
+// Supplier statistics
+router.get(
+    "/stats",
+    authenticate,
+    authorize("admin", "manager"),
+    supplierController.getSupplierStatistics
+);
+
+// Get supplier by ID
 router.get(
     "/:id",
     authenticate,
@@ -44,6 +57,7 @@ router.get(
     supplierController.getSupplier
 );
 
+// Create supplier
 router.post(
     "/",
     authenticate,
@@ -53,6 +67,7 @@ router.post(
     supplierController.createSupplier
 );
 
+// Update supplier
 router.put(
     "/:id",
     authenticate,
@@ -62,6 +77,7 @@ router.put(
     supplierController.updateSupplier
 );
 
+// Soft delete supplier
 router.delete(
     "/:id",
     authenticate,

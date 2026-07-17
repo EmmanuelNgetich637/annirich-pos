@@ -125,28 +125,25 @@ const updateSupplier = async (id, supplier) => {
 };
 
 const deleteSupplier = async (id) => {
-
     await db.query(
         `
         UPDATE suppliers
-        SET status='inactive'
-        WHERE id=?
+        SET status = 'inactive'
+        WHERE id = ?
         `,
         [id]
     );
-
 };
 
 const searchSuppliers = async (searchTerm) => {
+    searchTerm = searchTerm.trim();
 
     const [rows] = await db.query(
         `
         SELECT *
         FROM suppliers
-        WHERE
-            status='active'
-        AND
-        (
+        WHERE status = 'active'
+        AND (
             LOWER(name) LIKE LOWER(?)
             OR LOWER(contact_person) LIKE LOWER(?)
             OR LOWER(phone) LIKE LOWER(?)
@@ -165,10 +162,11 @@ const searchSuppliers = async (searchTerm) => {
     );
 
     return rows;
-
 };
 
 const getSuppliersPaginated = async (page = 1, limit = 10) => {
+    page = Number(page);
+    limit = Number(limit);
 
     const offset = (page - 1) * limit;
 
@@ -181,10 +179,7 @@ const getSuppliersPaginated = async (page = 1, limit = 10) => {
         LIMIT ?
         OFFSET ?
         `,
-        [
-            Number(limit),
-            Number(offset)
-        ]
+        [limit, offset]
     );
 
     const [[count]] = await db.query(
@@ -197,9 +192,25 @@ const getSuppliersPaginated = async (page = 1, limit = 10) => {
 
     return {
         suppliers: rows,
-        total: count.total
+        total: count.total,
+        page,
+        limit,
+        totalPages: Math.ceil(count.total / limit)
     };
+};
 
+const getSupplierStatistics = async () => {
+    const [[stats]] = await db.query(
+        `
+        SELECT
+            COUNT(*) AS totalSuppliers,
+            COALESCE(SUM(status = 'active'), 0) AS activeSuppliers,
+            COALESCE(SUM(status = 'inactive'), 0) AS inactiveSuppliers
+        FROM suppliers
+        `
+    );
+
+    return stats;
 };
 
 module.exports = {
@@ -211,5 +222,6 @@ module.exports = {
     updateSupplier,
     deleteSupplier,
     searchSuppliers,
-    getSuppliersPaginated
+    getSuppliersPaginated,
+    getSupplierStatistics
 };

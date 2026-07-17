@@ -6,6 +6,20 @@ const getCustomers = async () => {
 
 };
 
+const getCustomer = async (id) => {
+
+    const customer =
+        await Customer.getCustomerById(id);
+
+    if (!customer) {
+        throw new Error("Customer not found.");
+    }
+
+    return customer;
+
+};
+
 module.exports = {
-    getCustomers
+    getCustomers,
+    getCustomer
 };

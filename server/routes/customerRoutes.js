@@ -18,4 +18,11 @@ router.get(
     customerController.getCustomers
 );
 
+router.get(
+    "/:id",
+    authenticate,
+    authorize("admin", "manager", "cashier"),
+    customerController.getCustomer
+);
+
 module.exports = router;

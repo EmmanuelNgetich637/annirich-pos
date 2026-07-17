@@ -28,6 +28,41 @@ const getCustomers = async (req, res) => {
 
 };
 
+const getCustomer = async (req, res) => {
+
+    try {
+
+        const customer =
+            await customerService.getCustomer(
+                req.params.id
+            );
+
+        res.json({
+
+            success: true,
+            data: customer
+
+        });
+
+    } catch (error) {
+
+        const status =
+            error.message === "Customer not found."
+                ? 404
+                : 500;
+
+        res.status(status).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
-    getCustomers
+    getCustomers,
+    getCustomer
 };

@@ -209,6 +209,42 @@ const searchCustomers = async (keyword) => {
 
 };
 
+const getCustomersPaginated = async (page, limit) => {
+
+    const offset = (page - 1) * limit;
+
+    const [rows] = await db.query(
+        `
+        SELECT *
+        FROM customers
+        WHERE status = 'active'
+        ORDER BY name ASC
+        LIMIT ?
+        OFFSET ?
+        `,
+        [
+            Number(limit),
+            Number(offset)
+        ]
+    );
+
+    const [[count]] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM customers
+        WHERE status = 'active'
+        `
+    );
+
+    return {
+
+        customers: rows,
+        total: count.total
+
+    };
+
+};
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
@@ -219,5 +255,6 @@ module.exports = {
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    searchCustomers
+    searchCustomers,
+    getCustomersPaginated
 };

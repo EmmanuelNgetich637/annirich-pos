@@ -189,11 +189,58 @@ const searchCustomers = async (req, res) => {
 
 };
 
+const getCustomersPaginated = async (req, res) => {
+
+    try {
+
+        const page =
+            Number(req.query.page) || 1;
+
+        const limit =
+            Number(req.query.limit) || 10;
+
+        const result =
+            await customerService.getCustomersPaginated(
+                page,
+                limit
+            );
+
+        res.json({
+
+            success: true,
+
+            page,
+
+            limit,
+
+            total: result.total,
+
+            totalPages:
+                Math.ceil(result.total / limit),
+
+            data: result.customers
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    searchCustomers
+    searchCustomers,
+    getCustomersPaginated
 };

@@ -105,11 +105,21 @@ const searchCustomers = async (keyword) => {
 
 };
 
+const getCustomersPaginated = async (page, limit) => {
+
+    return await Customer.getCustomersPaginated(
+        page,
+        limit
+    );
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    searchCustomers
+    searchCustomers,
+    getCustomersPaginated
 };

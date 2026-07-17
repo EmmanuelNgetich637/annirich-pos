@@ -114,6 +114,12 @@ const getCustomersPaginated = async (page, limit) => {
 
 };
 
+const getCustomerStatistics = async () => {
+
+    return await Customer.getCustomerStatistics();
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
@@ -121,5 +127,6 @@ module.exports = {
     updateCustomer,
     deleteCustomer,
     searchCustomers,
-    getCustomersPaginated
+    getCustomersPaginated,
+    getCustomerStatistics
 };

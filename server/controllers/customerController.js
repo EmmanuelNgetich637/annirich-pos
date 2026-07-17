@@ -235,6 +235,33 @@ const getCustomersPaginated = async (req, res) => {
 
 };
 
+const getCustomerStatistics = async (req, res) => {
+
+    try {
+
+        const stats =
+            await customerService.getCustomerStatistics();
+
+        res.json({
+
+            success: true,
+            data: stats
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
     getCustomers,
     getCustomer,
@@ -242,5 +269,6 @@ module.exports = {
     updateCustomer,
     deleteCustomer,
     searchCustomers,
-    getCustomersPaginated
+    getCustomersPaginated,
+    getCustomerStatistics
 };

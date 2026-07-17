@@ -245,6 +245,26 @@ const getCustomersPaginated = async (page, limit) => {
 
 };
 
+const getCustomerStatistics = async () => {
+
+    const [[stats]] = await db.query(
+        `
+        SELECT
+            COUNT(*) AS totalCustomers,
+            SUM(status = 'active') AS activeCustomers,
+            SUM(status = 'inactive') AS inactiveCustomers
+        FROM customers
+        `
+    );
+
+    return {
+        totalCustomers: Number(stats.totalCustomers),
+        activeCustomers: Number(stats.activeCustomers || 0),
+        inactiveCustomers: Number(stats.inactiveCustomers || 0)
+    };
+
+};
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
@@ -256,5 +276,6 @@ module.exports = {
     updateCustomer,
     deleteCustomer,
     searchCustomers,
-    getCustomersPaginated
+    getCustomersPaginated,
+    getCustomerStatistics
 };

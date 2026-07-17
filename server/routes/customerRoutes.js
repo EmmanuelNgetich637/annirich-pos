@@ -38,6 +38,13 @@ router.get(
 );
 
 router.get(
+    "/stats",
+    authenticate,
+    authorize("admin", "manager"),
+    customerController.getCustomerStatistics
+);
+
+router.get(
     "/:id",
     authenticate,
     authorize("admin", "manager", "cashier"),

@@ -14,6 +14,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const saleRoutes = require("./routes/saleRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const db = require("./config/db");
 
@@ -77,6 +78,8 @@ app.use("/api/purchases", purchaseRoutes);
 app.use("/api/sales", saleRoutes);
 
 app.use("/api/expenses", expenseRoutes);
+
+app.use("/api/dashboard", dashboardRoutes);
 
 // Unknown route handler
 

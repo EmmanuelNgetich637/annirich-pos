@@ -17,6 +17,7 @@ const expenseRoutes = require("./routes/expenseRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const db = require("./config/db");
+const settingsRoutes = require("./routes/settingsRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -82,6 +83,8 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/reports", reportRoutes);
+
+app.use("/api/settings", settingsRoutes);
 
 // Unknown route handler
 

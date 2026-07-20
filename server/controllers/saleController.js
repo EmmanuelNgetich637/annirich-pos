@@ -1,5 +1,7 @@
 const saleService = require("../services/saleService");
+const logActivity = require("../utils/activityLogger");
 
+// CREATE SALE
 
 // CREATE SALE
 
@@ -18,6 +20,24 @@ const createSale = async (req, res) => {
 
         const sale =
             await saleService.createSale(data);
+
+
+
+        await logActivity({
+
+            user_id:req.user.id,
+
+            action:"CREATE",
+
+            module:"Sales",
+
+            description:
+            `Created sale receipt ${sale.receipt_number || sale.id}`,
+
+            ip_address:req.ip
+
+        });
+
 
 
         res.status(201).json({

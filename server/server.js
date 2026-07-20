@@ -20,6 +20,7 @@ const db = require("./config/db");
 const settingsRoutes = require("./routes/settingsRoutes");
 const receiptRoutes = require("./routes/receiptRoutes");
 const activityLogRoutes = require("./routes/activityLogRoutes");
+const backupRoutes = require("./routes/backupRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -91,6 +92,8 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/receipts", receiptRoutes);
 
 app.use("/api/activity-logs", activityLogRoutes);
+
+app.use("/api/backup", backupRoutes);
 
 // Unknown route handler
 

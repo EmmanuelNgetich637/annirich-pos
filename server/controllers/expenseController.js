@@ -1,5 +1,5 @@
 const expenseService = require("../services/expenseService");
-
+const logActivity = require("../utils/activityLogger");
 
 // Create Expense
 const createExpense = async (req, res) => {
@@ -8,6 +8,21 @@ const createExpense = async (req, res) => {
 
         const expense =
             await expenseService.createExpense(req.body);
+
+        await logActivity({
+
+            user_id: req.user.id,
+
+            action: "CREATE",
+
+            module: "Expenses",
+
+            description:
+            `Created expense ID ${expense.id}`,
+
+            ip_address: req.ip
+
+        });
 
         res.status(201).json({
             success: true,
@@ -91,6 +106,21 @@ const updateExpense = async (req, res) => {
                 req.body
             );
 
+        await logActivity({
+
+            user_id: req.user.id,
+
+            action: "UPDATE",
+
+            module: "Expenses",
+
+            description:
+            `Updated expense ID ${req.params.id}`,
+
+            ip_address: req.ip
+
+        });
+
         res.json({
             success: true,
             message: "Expense updated successfully.",
@@ -117,6 +147,21 @@ const deleteExpense = async (req, res) => {
         await expenseService.deleteExpense(
             req.params.id
         );
+
+        await logActivity({
+
+            user_id: req.user.id,
+
+            action: "DELETE",
+
+            module: "Expenses",
+
+            description:
+            `Deleted expense ID ${req.params.id}`,
+
+            ip_address: req.ip
+
+        });
 
         res.json({
             success: true,

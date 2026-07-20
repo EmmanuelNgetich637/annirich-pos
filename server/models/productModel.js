@@ -77,51 +77,48 @@ const getProductById = async (id) => {
 
 const updateProduct = async (id, product) => {
 
-    const {
-        barcode,
-        name,
-        category_id,
-        buying_price,
-        selling_price,
-        quantity,
-        minimum_stock,
-        unit,
-        image,
-        description
-    } = product;
+    const fields = [];
+    const values = [];
+
+
+    Object.keys(product).forEach((key) => {
+
+        if (product[key] !== undefined) {
+
+            fields.push(`${key}=?`);
+
+            values.push(product[key]);
+
+        }
+
+    });
+
+
+    if (fields.length === 0) {
+
+        return null;
+
+    }
+
+
+    values.push(id);
+
 
     const [result] = await db.query(
+
         `
         UPDATE products
-        SET
-            barcode=?,
-            name=?,
-            category_id=?,
-            buying_price=?,
-            selling_price=?,
-            quantity=?,
-            minimum_stock=?,
-            unit=?,
-            image=?,
-            description=?
+        SET ${fields.join(", ")}
         WHERE id=?
         `,
-        [
-            barcode,
-            name,
-            category_id,
-            buying_price,
-            selling_price,
-            quantity,
-            minimum_stock,
-            unit,
-            image,
-            description,
-            id
-        ]
+
+        values
+
     );
 
+
     return result;
+
 };
 
 const deleteProduct = async (id) => {

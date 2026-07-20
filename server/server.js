@@ -15,7 +15,7 @@ const purchaseRoutes = require("./routes/purchaseRoutes");
 const saleRoutes = require("./routes/saleRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-
+const reportRoutes = require("./routes/reportRoutes");
 const db = require("./config/db");
 
 // Load environment variables
@@ -80,6 +80,8 @@ app.use("/api/sales", saleRoutes);
 app.use("/api/expenses", expenseRoutes);
 
 app.use("/api/dashboard", dashboardRoutes);
+
+app.use("/api/reports", reportRoutes);
 
 // Unknown route handler
 

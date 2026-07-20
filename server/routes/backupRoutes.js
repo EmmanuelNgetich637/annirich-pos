@@ -44,5 +44,16 @@ router.get(
 
 );
 
+// Restore database from backup
+router.post(
+
+    "/restore/:fileName",
+
+    authMiddleware,
+
+    backupController.restoreBackup
+
+);
+
 
 module.exports = router;

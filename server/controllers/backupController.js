@@ -106,12 +106,63 @@ const downloadBackup = async (req, res) => {
 
 };
 
+const restoreBackup = async (req, res) => {
+
+    try {
+
+        const result =
+            await backupService.restoreBackup(
+                req.params.fileName
+            );
+
+        await logActivity({
+
+            user_id: req.user.id,
+
+            action: "RESTORE",
+
+            module: "Backup",
+
+            description:
+                `Restored database from ${req.params.fileName}`,
+
+            ip_address: req.ip
+
+        });
+
+        res.json({
+
+            success: true,
+
+            message:
+                "Database restored successfully.",
+
+            data: result
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
 
     createBackup,
 
     listBackups,
 
-    downloadBackup
+    downloadBackup,
+
+    restoreBackup
 
 };

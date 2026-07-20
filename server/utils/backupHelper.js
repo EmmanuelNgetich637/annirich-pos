@@ -52,6 +52,40 @@ const createBackup = async () => {
 
 };
 
+const restoreBackup = async (backupFile) => {
+
+    const backupPath =
+        path.join(
+            __dirname,
+            "../backups",
+            backupFile
+        );
+
+    if (!fs.existsSync(backupPath)) {
+
+        throw new Error("Backup file not found.");
+
+    }
+
+    const command =
+        `mysql ` +
+        `-u ${process.env.DB_USER} ` +
+        `-p${process.env.DB_PASSWORD} ` +
+        `${process.env.DB_NAME} < "${backupPath}"`;
+
+    await execAsync(command);
+
+    return {
+
+        success: true,
+
+        restoredFile: backupFile
+
+    };
+
+};
+
 module.exports = {
-    createBackup
+    createBackup,
+    restoreBackup
 };

@@ -66,12 +66,20 @@ const getBackupPath = async (fileName) => {
 
 };
 
+const restoreBackup = async (fileName) => {
+
+    return await backupHelper.restoreBackup(fileName);
+
+};
+
 module.exports = {
 
     createBackup,
 
     listBackups,
 
-    getBackupPath
+    getBackupPath,
+
+    restoreBackup
 
 };

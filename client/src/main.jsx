@@ -22,6 +22,7 @@ import "./styles/tables.css";
 /* Pages */
 import "./styles/dashboard.css";
 import "./styles/login.css";
+import "./styles/products.css";
 
 /* Responsive & Animations */
 import "./styles/responsive.css";

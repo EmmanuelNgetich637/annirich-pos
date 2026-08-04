@@ -5,6 +5,7 @@ import TableToolbar from "../components/common/TableToolbar";
 import DataTable from "../components/common/DataTable";
 import ProductRow from "../components/products/ProductRow";
 import ProductStats from "../components/products/ProductStats";
+import ProductModal from "../components/products/ProductModal";
 
 import products from "../data/products";
 
@@ -12,6 +13,7 @@ function Products() {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [status, setStatus] = useState("All");
+    const [openModal, setOpenModal] = useState(false);
 
     const columns = [
         "Barcode",
@@ -50,7 +52,10 @@ function Products() {
                 title="Products"
                 subtitle="Manage your inventory products."
                 action={
-                    <button className="primary-btn">
+                    <button
+                        className="primary-btn"
+                        onClick={() => setOpenModal(true)}
+                    >
                         Add Product
                     </button>
                 }
@@ -66,7 +71,10 @@ function Products() {
                 status={status}
                 setStatus={setStatus}
                 action={
-                    <button className="primary-btn">
+                    <button
+                        className="primary-btn"
+                        onClick={() => setOpenModal(true)}
+                    >
                         Add Product
                     </button>
                 }
@@ -80,6 +88,11 @@ function Products() {
                     />
                 ))}
             </DataTable>
+
+            <ProductModal
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+            />
         </>
     );
 }

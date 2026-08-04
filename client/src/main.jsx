@@ -10,6 +10,7 @@ import "./styles/globals.css";
 import "./styles/layout.css";
 import "./styles/typography.css";
 import "./styles/utilities.css";
+import "./styles/modal.css";
 
 /* Components */
 import "./styles/sidebar.css";

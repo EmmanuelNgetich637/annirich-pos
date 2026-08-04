@@ -1,18 +1,58 @@
 import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+
+import {
+    FiPlus,
+    FiDownload,
+    FiShoppingCart
+} from "react-icons/fi";
 
 function Dashboard() {
     return (
         <div style={{ padding: "40px" }}>
             <Card
                 title="Dashboard"
-                subtitle="Welcome to Annirich POS"
+                subtitle="Annirich Hardware POS"
             >
-                <h2>Dashboard UI is working 🎉</h2>
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "15px",
+                        flexWrap: "wrap"
+                    }}
+                >
+                    <Button
+                        icon={<FiPlus />}
+                    >
+                        Add Product
+                    </Button>
 
-                <p>
-                    This reusable Card component will be used
-                    throughout the application.
-                </p>
+                    <Button
+                        variant="secondary"
+                        icon={<FiDownload />}
+                    >
+                        Export
+                    </Button>
+
+                    <Button
+                        variant="success"
+                        icon={<FiShoppingCart />}
+                    >
+                        New Sale
+                    </Button>
+
+                    <Button
+                        variant="danger"
+                    >
+                        Delete
+                    </Button>
+
+                    <Button
+                        variant="outline"
+                    >
+                        View Reports
+                    </Button>
+                </div>
             </Card>
         </div>
     );

@@ -4,20 +4,29 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
+/* Base */
 import "./styles/variables.css";
-import "./styles/global.css";
+import "./styles/globals.css";
 import "./styles/layout.css";
+import "./styles/typography.css";
+import "./styles/utilities.css";
+
+/* Components */
 import "./styles/sidebar.css";
 import "./styles/topbar.css";
 import "./styles/buttons.css";
 import "./styles/cards.css";
-import "./styles/tables.css";
 import "./styles/forms.css";
+import "./styles/tables.css";
+
+/* Pages */
 import "./styles/dashboard.css";
 import "./styles/login.css";
-import "./styles/animations.css";
-import "./styles/responsive.css";
 
+/* Responsive & Animations */
+import "./styles/responsive.css";
+import "./styles/animations.css";
+ 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>

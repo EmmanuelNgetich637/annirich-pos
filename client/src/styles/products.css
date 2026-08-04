@@ -150,3 +150,28 @@
     color:#64748B;
     margin-top:6px;
 }
+
+.toolbar-left{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.table-toolbar select{
+    padding:12px 14px;
+    border:1px solid #E2E8F0;
+    border-radius:10px;
+    background:white;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.table-toolbar select:focus{
+    outline:none;
+    border-color:#2563EB;
+}
+
+.search-box{
+    border:1px solid #E2E8F0;
+}

@@ -2,6 +2,7 @@ import PageHeader from "../components/common/PageHeader";
 import TableToolbar from "../components/common/TableToolbar";
 import DataTable from "../components/common/DataTable";
 import ProductRow from "../components/products/ProductRow";
+import ProductStats from "../components/products/ProductStats";
 
 import products from "../data/products";
 
@@ -30,6 +31,8 @@ function Products() {
                     </button>
                 }
             />
+
+            <ProductStats />
 
             <TableToolbar />
 

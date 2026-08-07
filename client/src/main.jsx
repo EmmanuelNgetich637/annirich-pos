@@ -16,6 +16,7 @@ import "./styles/sales.css";
 import "./styles/reports.css";
 import "./styles/users.css";
 import "./styles/backup.css";
+import "./styles/settings.css";
 
 
 /* Components */

@@ -15,6 +15,8 @@ import "./styles/pos.css";
 import "./styles/sales.css";
 import "./styles/reports.css";
 import "./styles/users.css";
+import "./styles/backup.css";
+
 
 /* Components */
 import "./styles/sidebar.css";

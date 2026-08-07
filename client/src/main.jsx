@@ -11,6 +11,7 @@ import "./styles/layout.css";
 import "./styles/typography.css";
 import "./styles/utilities.css";
 import "./styles/modal.css";
+import "./styles/pos.css";
 
 /* Components */
 import "./styles/sidebar.css";

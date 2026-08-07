@@ -13,6 +13,7 @@ import "./styles/utilities.css";
 import "./styles/modal.css";
 import "./styles/pos.css";
 import "./styles/sales.css";
+import "./styles/reports.css";
 
 /* Components */
 import "./styles/sidebar.css";
